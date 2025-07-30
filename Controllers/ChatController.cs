@@ -69,6 +69,10 @@ namespace ChatAppApi.Controllers
         public async Task<IActionResult> GetMessages(string conversationId)
         {
             var messages = await _context.Messages.Find(m => m.ConversationId == conversationId).ToListAsync();
+            foreach ( var m in messages) {
+                var user = await _context.Users.Find(u => u.Id == m.SenderId).FirstOrDefaultAsync();
+                m.SenderName = user.Username;
+            }
             return Ok(messages);
         }
 
